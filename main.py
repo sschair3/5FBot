@@ -130,3 +130,4 @@ async def loop():
 loop.start()
 
 bot.run(TOKEN)
+# todo
