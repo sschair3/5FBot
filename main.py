@@ -70,22 +70,28 @@ async def on_ready():
 
 @bot.command(name="entry", description="本人にのみ表示できる入力ボタンを表示します。")
 @discord.ext.commands.has_role(ROLE_ID_5F)
-async def button(ctx):
+async def button(ctx:discord.ApplicationContext):
+    user = ctx.user
     await ctx.respond(view= MyView(), ephemeral=True)
+    print(f"{user.display_name} が/entryを実行しました。")
+    
 
 @bot.command(name="total", description="本人にのみ表示できるブロック費の合計金額を出力します。")
 @discord.ext.commands.has_role(ROLE_ID_5F)
-async def total(ctx):
+async def total(ctx:discord.ApplicationContext):
+    user = ctx.user
     conn = sqlite3.connect("5F_Block.db")
     cursor = conn.cursor()
     cursor.execute('SELECT SUM(CASE WHEN type="収入" THEN amount ELSE 0 END) - SUM(CASE WHEN type="支出" THEN amount ELSE 0 END) AS TOTAL FROM "entry";')
     result = cursor.fetchone()
     await ctx.respond(f"Total: {result[0]}", ephemeral=True)
     conn.close()
+    print(f"{user.display_name} が/totalを実行しました。")
 
 @bot.command(name="alldata", description="本人にのみ表示できるこれまでのデータ（今年分）をすべて出力します。")
 @discord.ext.commands.has_role(ROLE_ID_5F)
-async def all_data(ctx):
+async def all_data(ctx:discord.ApplicationContext):
+    user = ctx.user
     conn = sqlite3.connect("5F_Block.db")
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM entry;')
@@ -98,13 +104,16 @@ async def all_data(ctx):
         
     await ctx.respond(response, ephemeral=True)
     conn.close()
+    print(f"{user.display_name} が/alldataを実行しました。")
 
-@bot.command(name="exit", description="ボットを終了します。")
-@commands.is_owner()
-async def exit(ctx):
-    await ctx.respond("Botを終了します。", ephemeral=True)
-    await bot.close()
-    loop.stop()
+# @bot.command(name="exit", description="ボットを終了します。")
+# @commands.is_owner()
+# async def exit(ctx):
+#     await ctx.respond("Botを終了します。", ephemeral=True)
+#     await bot.close()
+#     loop.stop()
+#     print("Botを終了しました。")
+# このコマンドは意味がなくなった
     
 # ループ
 @tasks.loop(seconds=60)
