@@ -118,12 +118,11 @@ async def all_data(ctx:discord.ApplicationContext):
 # ループ
 @tasks.loop(seconds=60)
 async def loop():
-    now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-
+    now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))    
     if now.hour == 21 and now.minute == 30 and now.date % 5 == 0:
         lchannel = bot.get_channel(CHANNEL_ID_5F)
         await lchannel.send('掃除の時間')
-    if now.hour == 22 and now.minute == 00 and now.date == (20 or 5):
+    if now.hour == 22 and now.minute == 00 and (now.date.day == 20 or now.date.day == 5):
         lchannel = bot.get_channel(CHANNEL_ID_5F)
         await lchannel.send('ブロック会議')
 
